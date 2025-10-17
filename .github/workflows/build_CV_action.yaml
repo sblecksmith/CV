@@ -1,0 +1,84 @@
+name: Render Curriculum Vitae
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    name: Create and Publish CV
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # Step 2: Set up R
+      - name: Set up R environment
+        uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: '4.3'
+
+      # Step 3: Install Pandoc
+      - name: Install Pandoc
+        uses: r-lib/actions/setup-pandoc@v2
+        with:
+          pandoc-version: '3.1.11'
+
+      # Step 4: Install TeX and system dependencies
+      - name: Install TeX and system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            texlive-base \
+            texlive-latex-base \
+            texlive-latex-recommended \
+            texlive-xetex \
+            texlive-fonts-extra 
+  
+      # Step 5: Install R package dependencies
+      - name: Install R packages
+        run: |
+          Rscript -e 'install.packages(c("rmarkdown", "vitae"), repos = "https://cloud.r-project.org")'
+
+      # Step 6: Render the CV
+      - name: Render CV
+        run: |
+          Rscript -e 'rmarkdown::render("scripts/awesome-cv/awesome-cv.Rmd", output_file = "../../docs/your-name.pdf")'
+          Rscript -e 'rmarkdown::render("scripts/markdowncv/markdowncv.Rmd", output_file = "../../docs/your-name.html")'
+
+      # Step 7: Commit and push the rendered PDF
+      - name: Commit and push CV
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git add docs/your-name.pdf docs/your-name.html
+          git commit -m "Update CV PDF"
+          git push
+
+      # Step 8: Upload the CV as an artifact
+      - name: Upload CV PDF
+        uses: actions/upload-artifact@v4
+        with:
+          name: your-name-CVs
+          path: |
+            docs/your-name.pdf
+            docs/your-name.html
+
+      # Optional Step 9: Create latest link
+      #- name: Create Tag and Release
+      #  env:
+      #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #    INPUT_FILE_NAME: docs/your-name.pdf
+      #  run: |
+      #    bash ./entrypoint.sh 
+
+      - name: Validate CV output
+        run: |
+          if [ ! -f "docs/your-name.pdf" ]; then
+            echo "PDF file not found!" && exit 1
+          fi
+          if [ ! -f "docs/your-name.html" ]; then
+            echo "HTML file not found!" && exit 1
+          fi

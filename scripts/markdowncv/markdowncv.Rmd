@@ -1,0 +1,176 @@
+---
+title: markdowncv
+name: "Colton"
+namecolor: "#E1BE6A"
+surname: Baumler
+position: "Graduate Student Candidate"
+pronouns: He/Him
+address: "Data Intensive Biology lab of the University of California, Davis"
+#phone: +1 555 555 5555
+www: ""
+email: "ccbaumler@ucdavis.edu"
+github: ccbaumler
+linkedin: colton-baumler
+orcid: 0000-0002-5926-7792
+headcolor: "#FFD700"
+addresscolor: "#A7D3DC"
+codecolor: "#CCCCCC"
+backcolor: "#000"
+textcolor: "#FFFFFF"
+date: "`r format(Sys.time(), '%B %Y')`"
+aboutme: "I am deeply engaged in bioinformatics and mentorship. I excitedly wrangle data, craft software, and create dynamic mentorship opportunities."
+output:
+  vitae::markdowncv:
+    theme: ccbaumler
+css:
+  - "media/ccbaumler-screen.css"
+  - "media/ccbaumler-print.css"
+---
+
+```{r setup, include=FALSE}
+# Go to https://yihui.org/tinytex/r/#debugging
+# if you experience any latex erros
+
+knitr::opts_chunk$set(echo = FALSE,
+                      warning = FALSE,
+                      message = FALSE)
+
+require(xfun) # Utility functions for knitr, rmarkdown, quarto, and more.
+
+# List of all the packages used
+packages <- c('vitae'     # The CV's LaTeX Template
+             ,'tibble'    # Data structure for tribbles
+             ,'magrittr'  # The Pipe %>%
+             ,'here'      # Relative File Paths
+             ,'readr'     # Data Loading
+             ,'glue'      # String Manipulation
+            )
+
+# Load all packages used
+xfun::pkg_attach2(packages, message = FALSE)
+
+# Load the data file of tibbles
+source(file = here("data", "data.r"))
+
+```
+
+
+## Education
+
+```{r EDUCATION}
+
+edu %>%
+  detailed_entries(
+    with = inst,
+    #what = where,
+    why = detail,
+    when = glue::glue("{startYear} - {endMonth} {endYear}",.na = ""),
+    where = degree
+  )
+
+```
+
+## Research Experience
+
+```{r EXPERIENCE}
+
+exp %>%
+  detailed_entries(
+    with = unit,
+    #what = unit,
+    why = detail,
+    when = glue::glue("{startMonth} {startYear} - {endMonth} {endYear}",.na = ""),
+    where = title
+  )
+
+```
+
+## Professional Service
+
+```{r SERVICE}
+
+service %>%
+  brief_entries(
+    with = accomplishment,
+    what = area,
+    #why = detail,
+    when = glue::glue("{startYear} - {endYear}{endMonth}",.na = ""),
+    #where = where
+  )
+
+```
+
+## Community Involvement
+
+```{r COMMUNITY}
+
+community %>%
+  detailed_entries(
+    with = where,
+    #what = accomplishment,
+    #why = detail,
+    when = glue::glue("{startYear} - {endYear}{endMonth}",.na = ""),
+    where = area
+  )
+
+```
+
+## Funding and Grants
+
+```{r FUNDS}
+
+funds %>%
+  detailed_entries(
+    with = where,
+    what = accomplishment,
+    why = detail,
+    when = glue::glue("{startYear} - {endYear}",.na = ""),
+    where = area
+  )
+
+```
+
+## Honors and Awards
+
+```{r HONORS}
+
+honors %>%
+  detailed_entries(
+    with = where,
+    #what = ,
+    why = accomplishment,
+    when = glue::glue("{month} {year}",.na = ""),
+    where = area
+  )
+
+```
+
+## Skills
+
+```{r SKILLS}
+
+skills %>%
+  detailed_entries(
+    with = where,
+    what = detail,
+    why = skills,
+    when = year,
+    where = area
+  )
+
+```
+
+## Presentations
+
+```{r PRESENTS}
+
+presents %>%
+  detailed_entries(
+    with = where,
+    #what = ,
+    why = accomplishment,
+    when = year,
+    where = area
+  )
+
+```
