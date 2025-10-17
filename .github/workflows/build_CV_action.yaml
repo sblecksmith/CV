@@ -45,15 +45,15 @@ jobs:
       # Step 6: Render the CV
       - name: Render CV
         run: |
-          Rscript -e 'rmarkdown::render("scripts/awesome-cv/awesome-cv.Rmd", output_file = "../../docs/your-name.pdf")'
-          Rscript -e 'rmarkdown::render("scripts/markdowncv/markdowncv.Rmd", output_file = "../../docs/your-name.html")'
+          Rscript -e 'rmarkdown::render("scripts/awesome-cv/awesome-cv.Rmd", output_file = "../../docs/sarah.blecksmith.pdf")'
+          Rscript -e 'rmarkdown::render("scripts/markdowncv/markdowncv.Rmd", output_file = "../../docs/sarah.blecksmith.html")'
 
       # Step 7: Commit and push the rendered PDF
       - name: Commit and push CV
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
-          git add docs/your-name.pdf docs/your-name.html
+          git add docs/sarah.blecksmith.pdf docs/sarah.blecksmith.html
           git commit -m "Update CV PDF"
           git push
 
@@ -61,24 +61,24 @@ jobs:
       - name: Upload CV PDF
         uses: actions/upload-artifact@v4
         with:
-          name: your-name-CVs
+          name: sarah.blecksmith-CVs
           path: |
-            docs/your-name.pdf
-            docs/your-name.html
+            docs/sarah.blecksmith.pdf
+            docs/sarah.blecksmith.html
 
       # Optional Step 9: Create latest link
       #- name: Create Tag and Release
       #  env:
       #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #    INPUT_FILE_NAME: docs/your-name.pdf
+      #    INPUT_FILE_NAME: docs/sarah.blecksmith.pdf
       #  run: |
       #    bash ./entrypoint.sh 
 
       - name: Validate CV output
         run: |
-          if [ ! -f "docs/your-name.pdf" ]; then
+          if [ ! -f "docs/sarah.blecksmith.pdf" ]; then
             echo "PDF file not found!" && exit 1
           fi
-          if [ ! -f "docs/your-name.html" ]; then
+          if [ ! -f "docs/sarah.blecksmith.html" ]; then
             echo "HTML file not found!" && exit 1
           fi
